@@ -68,6 +68,7 @@ webdriver.testing.jsunit.TestRunner.prototype.initialize = function(testCase) {
   this.screenshotCacheEl_.style.display = 'none';
 };
 
+
 /** @override */
 webdriver.testing.jsunit.TestRunner.prototype.execute = function() {
   if (!this.testCase) {
