@@ -75,8 +75,26 @@ webdriver.testing.jsunit.TestRunner.prototype.execute = function() {
     throw Error('The test runner must be initialized with a test case before ' +
                 'execute can be called.');
   }
+
+
   this.screenshotCacheEl_.innerHTML = '';
   this.client_.sendInitEvent();
+
+ // This check is adapted from goog.testing.TestRunner.prototype.execute.
+  if (this.isStrict() && this.testCase.getCount() == 0) {
+    // TODO: there's nothing catching exceptions to send the error event before
+    // runTests is called. Throwing thus causes WebDriver to time out waiting
+    // for events to fire, rather than immediately fail. Should this function be
+    // throwing like this? Should something be catching and converting to
+    // events?
+    this.client_.sendErrorEvent(
+            'No tests found in given test case: ' + this.testCase.getName() +
+            ' ' +
+            'By default, the test runner fails if a test case has no tests. ' +
+            'To modify this behavior, see goog.testing.TestRunner\'s ' +
+            'setStrict() method, or G_testRunner.setStrict()');
+  }
+
   this.testCase.setCompletedCallback(goog.bind(this.onComplete_, this));
   this.testCase.runTests();
 };
